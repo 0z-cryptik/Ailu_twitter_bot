@@ -1,0 +1,21 @@
+{
+  "name": "ailu_twitter_bot",
+  "version": "1.0.0",
+  "description": "a twitter bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "0z-cryptik",
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "oauth-1.0a": "^2.2.6"
+  }
+}
