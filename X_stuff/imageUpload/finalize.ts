@@ -1,40 +1,22 @@
+import { uploadURL, accessSecret, accessToken } from "./miscVariables";
 import { myOauth } from "../Oauth/Oauth";
-import { config } from "dotenv";
 
-config();
-
-export const finalizeUpload = async (media_id: string) => {
-  const FINALIZE_URL = "https://upload.twitter.com/1.1/media/upload.json";
-
-  const formData = new FormData()
-  formData.append("media_id", media_id);
-
-  const authHeader = myOauth.toHeader(
-    myOauth.authorize(
-      { url: FINALIZE_URL, method: "POST" },
-      {
-        key: process.env.ACCESS_TOKEN,
-        secret: process.env.ACCESS_SECRET
+export const finalizeUpload = async (mediaID: string) => {
+  const finalizeResponse = await new Promise<any>((resolve, reject) => {
+    (myOauth.post as any)(
+      uploadURL,
+      accessToken,
+      accessSecret,
+      { command: "FINALIZE", media_id: mediaID },
+      (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(JSON.parse(data));
+        }
       }
-    )
-  );
-
-  const response = await fetch(FINALIZE_URL, {
-    method: "POST",
-    headers: {
-      ...authHeader,
-      "Content-Type": "multipart/form-data"
-    },
-    body: formData
+    );
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      `Finalizing media upload failed: ${JSON.stringify(data)}`
-    );
-  }
-
-  return data.media_id_string;
+  return finalizeResponse.media_id_string;
 };

@@ -1,38 +1,33 @@
 import { myOauth } from "../Oauth/Oauth";
 import { config } from "dotenv";
+import * as fs from "fs";
+import { uploadURL, accessSecret, accessToken } from "./miscVariables";
 
 config();
 
-export const initializeMediaUpload = async () => {
-  const INIT_URL = "https://upload.twitter.com/1.1/media/upload.json";
+export const initializeMediaUpload = async (imagePath: string) => {
+  const imageStats = fs.statSync(imagePath);
+  const totalBytes = imageStats.size;
 
-  const formData = new URLSearchParams();
-  formData.append("media_category", "tweet_image");
-
-  const authHeader = myOauth.toHeader(
-    myOauth.authorize(
-      { url: INIT_URL, method: "POST" },
+  const initResponse = await new Promise<any>((resolve, reject) => {
+    (myOauth.post as any)(
+      uploadURL,
+      accessToken,
+      accessSecret,
       {
-        key: process.env.ACCESS_TOKEN,
-        secret: process.env.ACCESS_SECRET
+        command: "INIT",
+        media_type: "image/jpeg",
+        total_bytes: totalBytes
+      },
+      (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(JSON.parse(data));
+        }
       }
-    )
-  );
-
-  const response = await fetch(INIT_URL, {
-    method: "POST",
-    headers: {
-      ...authHeader,
-      "Content-Type": "multipart/form-data"
-    },
-    body: formData
+    );
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(`Media init failed: ${JSON.stringify(data)}`);
-  }
-
-  return data.media_id_string;
+  return initResponse.media_id_string;
 };

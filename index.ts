@@ -16,13 +16,14 @@ const makePost2 = async () => {
   const prompt = "write a tweet about health";
 
   const tweetText: string =
-    "🌿 Prioritize your health today! Remember, small changes can lead to big results: drink more water, take a short walk, or try a new healthy recipe. Your body and mind will thank you! 💪✨ #HealthMatters #WellnessJourney";
+    "Your health is your greatest asset. 🩺 Don't wait for symptoms—regular medical checkups can catch issues early and save lives. Take charge of your well-being today. #HealthIsWealth #StayHealthy";
 
-  const tweetImage: string = "https://oaidalleapiprodscus.blob.core.windows.net/private/org-5KF8r6lwWPQPKGqaZAuU1zE8/user-McBQhnPUW2UUfrcRW9rJ4w0D/img-pKClqrbYjL7GyX1THxo8vWIO.png?st=2024-12-08T02%3A17%3A02Z&se=2024-12-08T04%3A17%3A02Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-12-07T23%3A06%3A59Z&ske=2024-12-08T23%3A06%3A59Z&sks=b&skv=2024-08-04&sig=OVQEioAcfkE4qM2jRlHGul4MmPd1HhtHVhVy7G59H/8%3D"
+  const tweetImage: string =
+    "https://res.cloudinary.com/ds7xwxu4j/image/upload/v1733648961/DALL_E_2024-12-05_19.27.07_-_A_detailed_illustration_of_a_panda_dressed_as_a_medical_doctor._The_panda_is_wearing_a_white_lab_coat_a_stethoscope_around_its_neck_and_holding_a_cl_uwdhph.webp";
 
-  const bufferedImage: string = await uploadImageAndGetMediaID(tweetImage);
+  const image: string = await uploadImageAndGetMediaID(tweetImage);
 
-  await tweet(tweetText, bufferedImage);
+  await tweet(tweetText, image);
 };
 
 makePost2();

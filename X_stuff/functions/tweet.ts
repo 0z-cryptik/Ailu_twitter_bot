@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { myOauth } from "../Oauth/Oauth";
+import { myOauth2 } from "../Oauth/Oauth";
 
 config();
 
@@ -17,8 +17,8 @@ export const tweet = async (tweetText: string, mediaID: string) => {
       }
     };
 
-    const authHeader = myOauth.toHeader(
-      myOauth.authorize(
+    const authHeader = myOauth2.toHeader(
+      myOauth2.authorize(
         { url: API_URL, method: "POST" },
         {
           key: accessToken,
