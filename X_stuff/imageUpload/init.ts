@@ -1,4 +1,4 @@
-import { myOauth } from "../Oauth/Oauth";
+import { myOauth, myOauth2 } from "../Oauth/Oauth";
 import { config } from "dotenv";
 import { uploadURL, accessSecret, accessToken } from "./miscVariables";
 import axios from "axios";
@@ -6,32 +6,36 @@ import axios from "axios";
 config();
 
 export const initializeMediaUpload = async (imageURL: string) => {
-  const imageFetch = await axios.get(imageURL, {
-    responseType: "arraybuffer"
-  });
-  const imageBuffer = imageFetch.data;
+  try {
+    const imageFetch = await axios.get(imageURL, {
+      responseType: "arraybuffer"
+    });
+    const imageBuffer = imageFetch.data;
 
-  const initResponse = await new Promise<any>((resolve, reject) => {
-    (myOauth.post as any)(
-      uploadURL,
-      accessToken,
-      accessSecret,
-      {
-        command: "INIT",
-        media_type: "image/jpeg",
-        total_bytes: imageBuffer.length
-      },
-      (error, response, data) => {
-        if (error) {
-          reject(error);
-        } else if (typeof data === "string") {
-          resolve(JSON.parse(data));
-        } else {
-          resolve(data); 
-        }
-      }
+    const oauthHeader = myOauth2.toHeader(
+      myOauth2.authorize(
+        { url: uploadURL, method: "POST" },
+        { key: accessToken, secret: accessSecret }
+      )
     );
-  });
 
-  return [initResponse.media_id_string, imageBuffer];
+    const payload = new URLSearchParams({
+      command: "INIT",
+      media_type: "image/jpeg",
+      total_bytes: imageBuffer.length.toString()
+    });
+
+    const initResponse = await axios.post(uploadURL, payload, {
+      headers: {
+        ...oauthHeader,
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    });
+
+    console.log("initialized")
+    return [initResponse.data.media_id_string, imageBuffer];
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };

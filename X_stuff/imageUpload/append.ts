@@ -1,28 +1,32 @@
 import { uploadURL, accessSecret, accessToken } from "./miscVariables";
-import { myOauth } from "../Oauth/Oauth";
+import { myOauth, myOauth2 } from "../Oauth/Oauth";
+import axios from "axios";
+import FormData from "form-data";
 
-export const appendMediaData = async (
-  mediaID: any,
-  imageBuffer: any
-) => {
-  await new Promise<void>((resolve, reject) => {
-    (myOauth.post as any)(
-      uploadURL,
-      accessToken,
-      accessSecret,
-      {
-        command: "APPEND",
-        media_id: mediaID,
-        segment_index: 0,
-        media_data: imageBuffer.toString("base64")
-      },
-      (error, response, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      }
+export const appendMediaData = async (mediaID: any, imageBuffer: any) => {
+  try {
+    const payload = new FormData();
+    payload.append("command", "APPEND");
+    payload.append("media_id", mediaID);
+    payload.append("segment_index", "0");
+    payload.append("media", imageBuffer);
+
+    const authHeader = myOauth2.toHeader(
+      myOauth2.authorize(
+        { url: uploadURL, method: "POST" },
+        { key: accessToken, secret: accessSecret }
+      )
     );
-  });
+
+    await axios.post(uploadURL, payload, {
+      headers: {
+        ...authHeader,
+        ...payload.getHeaders()
+      }
+    });
+
+    console.log("picture appended");
+  } catch (err) {
+    console.error(err);
+  }
 };

@@ -1,24 +1,36 @@
+import { myOauth2 } from "../Oauth/Oauth";
 import { uploadURL, accessSecret, accessToken } from "./miscVariables";
-import { myOauth } from "../Oauth/Oauth";
+import axios from "axios";
 
-export const finalizeUpload = async (mediaID) => {
-  const finalizeResponse = await new Promise<any>((resolve, reject) => {
-    (myOauth.post as any)(
-      uploadURL,
-      accessToken,
-      accessSecret,
-      { command: "FINALIZE", media_id: mediaID },
-      (error, response, data) => {
-        if (error) {
-          reject(error);
-        } else if (typeof data === "string") {
-          resolve(JSON.parse(data));
-        } else {
-          resolve(data);
+
+export const finalizeUpload = async (mediaID: string) => {
+  try {
+    const payload = {
+      command: "FINALIZE",
+      media_id: mediaID,
+    };
+
+    const authHeader = myOauth2.toHeader(
+      myOauth2.authorize(
+        { url: uploadURL, method: "POST" },
+        {
+          key: accessToken!,
+          secret: accessSecret!,
         }
-      }
+      )
     );
-  });
 
-  return finalizeResponse.media_id_string;
+    const response = await axios.post(uploadURL, payload, {
+      headers: {
+        ...authHeader,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Media upload finalized.");
+    return response.data.media_id_string;
+  } catch (error) {
+    console.error("Error finalizing upload:", error);
+    throw error;
+  }
 };
