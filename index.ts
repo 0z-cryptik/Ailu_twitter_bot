@@ -23,7 +23,11 @@ const makePost2 = async () => {
 
   const image: string = await uploadImageAndGetMediaID(tweetImage);
 
-  await tweet(tweetText, image);
+  if (image) {
+    await tweet(tweetText, image);
+  } else {
+    throw new Error("image is nullish");
+  }
 };
 
 makePost2();

@@ -9,6 +9,13 @@ const accessToken = process.env.ACCESS_TOKEN;
 const accessTokenSecret = process.env.ACCESS_SECRET;
 
 export const tweet = async (tweetText: string, mediaID: string) => {
+  if (!mediaID) {
+    console.error("Error: mediaID is null or undefined");
+    return;
+  }
+  
+  console.log(`reached tweet mediaID: ${mediaID}`);
+
   try {
     const payloadData = {
       text: tweetText,

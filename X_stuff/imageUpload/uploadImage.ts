@@ -4,8 +4,8 @@ import { finalizeUpload } from "./finalize";
 
 export const uploadImageAndGetMediaID = async (imageURL: string) => {
   try {
-    const mediaID = await initializeMediaUpload(imageURL);
-    await appendMediaData(mediaID, imageURL);
+    const [mediaID, imageBuffer] = await initializeMediaUpload(imageURL);
+    await appendMediaData(mediaID, imageBuffer);
     const mediaIDString = await finalizeUpload(mediaID);
 
     console.log(`image uploaded successfully, media_id: ${mediaIDString}`);

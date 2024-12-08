@@ -1,10 +1,9 @@
 import { uploadURL, accessSecret, accessToken } from "./miscVariables";
 import { myOauth } from "../Oauth/Oauth";
-import * as fs from "fs";
 
 export const appendMediaData = async (
-  mediaID: string,
-  imagePath: string
+  mediaID: any,
+  imageBuffer: any
 ) => {
   await new Promise<void>((resolve, reject) => {
     (myOauth.post as any)(
@@ -14,11 +13,10 @@ export const appendMediaData = async (
       {
         command: "APPEND",
         media_id: mediaID,
-        segment_index: 0
+        segment_index: 0,
+        media_data: imageBuffer.toString("base64")
       },
-      fs.createReadStream(imagePath),
-      "application/octet-stream",
-      (error, data) => {
+      (error, response, data) => {
         if (error) {
           reject(error);
         } else {

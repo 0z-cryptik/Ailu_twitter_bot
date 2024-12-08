@@ -1,13 +1,15 @@
 import { myOauth } from "../Oauth/Oauth";
 import { config } from "dotenv";
-import * as fs from "fs";
 import { uploadURL, accessSecret, accessToken } from "./miscVariables";
+import axios from "axios";
 
 config();
 
-export const initializeMediaUpload = async (imagePath: string) => {
-  const imageStats = fs.statSync(imagePath);
-  const totalBytes = imageStats.size;
+export const initializeMediaUpload = async (imageURL: string) => {
+  const imageFetch = await axios.get(imageURL, {
+    responseType: "arraybuffer"
+  });
+  const imageBuffer = imageFetch.data;
 
   const initResponse = await new Promise<any>((resolve, reject) => {
     (myOauth.post as any)(
@@ -17,17 +19,19 @@ export const initializeMediaUpload = async (imagePath: string) => {
       {
         command: "INIT",
         media_type: "image/jpeg",
-        total_bytes: totalBytes
+        total_bytes: imageBuffer.length
       },
-      (error, data) => {
+      (error, response, data) => {
         if (error) {
           reject(error);
-        } else {
+        } else if (typeof data === "string") {
           resolve(JSON.parse(data));
+        } else {
+          resolve(data); 
         }
       }
     );
   });
 
-  return initResponse.media_id_string;
+  return [initResponse.media_id_string, imageBuffer];
 };
