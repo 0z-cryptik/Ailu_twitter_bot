@@ -9,7 +9,7 @@ export const uploadImageAndGetMediaID = async (imageURL: string) => {
     const image = await fetch(imageURL);
 
     if (!image.ok) {
-      throw new Error("failed to fetch image from OpenAI");
+      throw new Error("failed to fetch image");
     }
 
     // buffer the image because twitter requires it
