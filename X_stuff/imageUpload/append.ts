@@ -1,32 +1,42 @@
-import { uploadURL, accessSecret, accessToken } from "./miscVariables";
-import { myOauth, myOauth2 } from "../Oauth/Oauth";
+import { myOauth } from "../Oauth/Oauth";
+import { config } from "dotenv";
+import { uploadURL } from "./miscVariables";
 import axios from "axios";
-import FormData from "form-data";
 
-export const appendMediaData = async (mediaID: any, imageBuffer: any) => {
+config();
+
+export const appendMediaData = async (mediaID: string, imageBuffer: Buffer) => {
   try {
-    const payload = new FormData();
-    payload.append("command", "APPEND");
-    payload.append("media_id", mediaID);
-    payload.append("segment_index", "0");
-    payload.append("media", imageBuffer);
+    // Base64 encode the image data
+    const base64Image = Buffer.from(imageBuffer).toString("base64");
 
-    const authHeader = myOauth2.toHeader(
-      myOauth2.authorize(
-        { url: uploadURL, method: "POST" },
-        { key: accessToken, secret: accessSecret }
-      )
-    );
-
-    await axios.post(uploadURL, payload, {
-      headers: {
-        ...authHeader,
-        ...payload.getHeaders()
-      }
+    // Prepare payload
+    const payload = new URLSearchParams({
+      command: "APPEND",
+      media_id: mediaID,
+      segment_index: "0", // For larger files, you may need multiple segments
+      media: base64Image,
     });
 
-    console.log("picture appended");
+    // OAuth Authorization
+    const oauthParams = myOauth.authHeader(
+      uploadURL,
+      process.env.ACCESS_TOKEN,
+      process.env.ACCESS_SECRET,
+      "POST"
+    );
+
+    // Send the request
+    await axios.post(uploadURL, payload, {
+      headers: {
+        Authorization: oauthParams,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    console.log("Picture appended successfully.");
   } catch (err) {
-    console.error(err);
+    console.error("Error appending media data:");
+    //throw err;
   }
 };

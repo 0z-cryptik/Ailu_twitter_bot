@@ -16,7 +16,7 @@ export const uploadImageAndGetMediaID = async (imageURL: string): Promise<string
     console.log(`Image uploaded successfully, media_id: ${mediaIDString}`);
     return mediaIDString;
   } catch (err) {
-    console.error("Error during image upload:", err);
-    throw err; // Propagate the error to the caller
+    console.error("Error during image upload");
+    //throw err; // Propagate the error to the caller
   }
 };
