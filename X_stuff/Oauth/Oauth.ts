@@ -19,7 +19,7 @@ export const myOauth2 = new OAuth({
 
 export const myOauth = new OAuth2.OAuth(
   "https://api.twitter.com/oauth/request_token",
-  `https://api.twitter.com/oauth/access_token${access_token}`,
+  `https://api.twitter.com/oauth/access_token`,
   consumerKey,
   consumerSecret,
   "1.0A",
