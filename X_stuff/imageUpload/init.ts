@@ -1,42 +1,65 @@
-import { myOauth } from "../Oauth/Oauth";
-import { config } from "dotenv";
-import { uploadURL, accessSecret, accessToken } from "./miscVariables";
 import axios from "axios";
-
-config();
+import { oauth } from "../Oauth/Oauth";
+import { accessSecret, accessToken, uploadURL } from "./miscVariables";
 
 export const initializeMediaUpload = async (imageURL: string) => {
   try {
+    // Fetch the image
     const imageFetch = await axios.get(imageURL, {
-      responseType: "arraybuffer",
+      responseType: "arraybuffer"
     });
+
     const imageBuffer = imageFetch.data;
 
-    // OAuth Authorization
-    const oauthParams = myOauth.authHeader(
-      uploadURL,
-      process.env.ACCESS_TOKEN,
-      process.env.ACCESS_SECRET,
-      "POST"
+    console.log(imageBuffer);
+    console.log(
+      "Detected image type:",
+      imageBuffer.slice(0, 4).toString("hex")
     );
 
+    // Prepare the OAuth parameters
+    const requestData = {
+      url: uploadURL,
+      method: "POST",
+      data: {
+        command: "INIT",
+        media_type: "image/webp", // Use correct media type for your image
+        total_bytes: imageBuffer.length.toString()
+      }
+    };
+
+    // Add token and secret to the authorization process
+    const oauthParams = oauth.toHeader(
+      oauth.authorize(requestData, {
+        key: accessToken,
+        secret: accessSecret
+      })
+    );
+
+    console.log("OAuth Authorization Header:", oauthParams);
+
+    // Send the request to Twitter API to initialize media upload
     const payload = new URLSearchParams({
       command: "INIT",
-      media_type: "image/jpeg",
-      total_bytes: imageBuffer.length.toString(),
+      media_type: "image/webp",
+      total_bytes: imageBuffer.length.toString()
     });
 
     const initResponse = await axios.post(uploadURL, payload, {
       headers: {
-        Authorization: oauthParams,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
+        Authorization: oauthParams.Authorization,
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
     });
 
-    console.log("Initialized");
+    console.log("Initialization Response:", initResponse.data);
+
     return [initResponse.data.media_id_string, imageBuffer];
   } catch (err) {
-    console.error('error initializing');
-    //throw err;
+    console.error(
+      "Error during initialization:",
+      err.response?.data || err.message || err
+    );
+    throw new Error("Error initializing media upload");
   }
 };

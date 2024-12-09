@@ -7,9 +7,10 @@ config();
 
 const consumerKey = process.env.API_KEY;
 const consumerSecret = process.env.API_SECRET;
-const access_token = process.env.ACCESS_TOKEN;
+const accessToken = process.env.ACCESS_TOKEN;
+const accessSecret = process.env.ACCESS_SECRET;
 
-export const myOauth2 = new OAuth({
+export const oauth = new OAuth({
   consumer: { key: consumerKey, secret: consumerSecret },
   signature_method: "HMAC-SHA1",
   hash_function(baseString, key) {
