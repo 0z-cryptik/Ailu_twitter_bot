@@ -1,14 +1,11 @@
 import { config } from "dotenv";
 import OAuth from "oauth-1.0a";
 import { createHmac } from "crypto";
-import OAuth2 from "oauth";
 
 config();
 
 const consumerKey = process.env.API_KEY;
 const consumerSecret = process.env.API_SECRET;
-const accessToken = process.env.ACCESS_TOKEN;
-const accessSecret = process.env.ACCESS_SECRET;
 
 export const oauth = new OAuth({
   consumer: { key: consumerKey, secret: consumerSecret },
@@ -18,12 +15,4 @@ export const oauth = new OAuth({
   }
 });
 
-export const myOauth = new OAuth2.OAuth(
-  "https://api.twitter.com/oauth/request_token",
-  `https://api.twitter.com/oauth/access_token`,
-  consumerKey,
-  consumerSecret,
-  "1.0A",
-  null,
-  "HMAC-SHA1"
-);
+

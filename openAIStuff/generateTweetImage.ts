@@ -7,10 +7,10 @@ const key = process.env.OPENAI_API_KEY;
 
 const openai = new OpenAI({ apiKey: key });
 
-export const generateTweetImage = async () => {
+export const generateTweetImage = async (prompt: string) => {
   const gpt_image_response = await openai.images.generate({
     model: "dall-e-3",
-    prompt: `create an image of a black and white panda dressed as a medical doctor`,
+    prompt: prompt,
     n: 1,
     size: "1024x1024"
   });

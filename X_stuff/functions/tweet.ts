@@ -1,10 +1,9 @@
 import { config } from "dotenv";
 import { oauth } from "../Oauth/Oauth";
 import axios from "axios";
+import { tweetURL } from "../../globalVariables/globalVariables";
 
 config();
-
-const API_URL = "https://api.x.com/2/tweets";
 
 const accessToken = process.env.ACCESS_TOKEN;
 const accessTokenSecret = process.env.ACCESS_SECRET;
@@ -34,7 +33,7 @@ export const tweet = async (tweetText: string, mediaID: string) => {
     // Generate the OAuth authorization header
     const authHeader = oauth.toHeader(
       oauth.authorize(
-        { url: API_URL, method: "POST"},
+        { url: tweetURL, method: "POST"},
         {
           key: accessToken,
           secret: accessTokenSecret
@@ -43,7 +42,7 @@ export const tweet = async (tweetText: string, mediaID: string) => {
     );
 
     // Make the POST request to Twitter API using axios
-    const response = await axios.post(API_URL, payloadData, {
+    const response = await axios.post(tweetURL, payloadData, {
       headers: {
         Authorization: authHeader.Authorization,
         "Content-Type": "application/json" // Correct Content-Type for JSON payload

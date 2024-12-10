@@ -1,6 +1,10 @@
 import axios from "axios";
 import { oauth } from "../Oauth/Oauth";
-import { accessSecret, accessToken, uploadURL } from "./miscVariables";
+import {
+  accessSecret,
+  accessToken,
+  uploadURL
+} from "../../globalVariables/globalVariables";
 
 export const initializeMediaUpload = async (imageURL: string) => {
   try {

@@ -1,6 +1,6 @@
-import { myOauth, oauth } from "../Oauth/Oauth";
+import { oauth } from "../Oauth/Oauth";
 import { config } from "dotenv";
-import { uploadURL } from "./miscVariables";
+import { uploadURL } from "../../globalVariables/globalVariables";
 import axios from "axios";
 
 config();

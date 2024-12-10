@@ -1,5 +1,9 @@
-import { myOauth, oauth } from "../Oauth/Oauth";
-import { uploadURL, accessSecret, accessToken } from "./miscVariables";
+import { oauth } from "../Oauth/Oauth";
+import {
+  uploadURL,
+  accessSecret,
+  accessToken
+} from "../../globalVariables/globalVariables";
 import axios from "axios";
 
 export const appendMediaData = async (
