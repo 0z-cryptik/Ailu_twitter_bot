@@ -5,6 +5,7 @@ import {
   accessToken,
   uploadURL
 } from "../../globalVariables/globalVariables";
+import imageType from "image-type";
 
 export const initializeMediaUpload = async (imageURL: string) => {
   try {
@@ -14,12 +15,9 @@ export const initializeMediaUpload = async (imageURL: string) => {
     });
 
     const imageBuffer = imageFetch.data;
-
     console.log(imageBuffer);
-    console.log(
-      "Detected image type:",
-      imageBuffer.slice(0, 4).toString("hex")
-    );
+
+    const imgType = await imageType(imageBuffer);
 
     // Prepare the OAuth parameters
     const requestData = {
@@ -27,7 +25,7 @@ export const initializeMediaUpload = async (imageURL: string) => {
       method: "POST",
       data: {
         command: "INIT",
-        media_type: "image/webp", // Use correct media type for your image
+        media_type: imgType.mime, // Use correct media type for your image
         total_bytes: imageBuffer.length.toString()
       }
     };
@@ -45,7 +43,7 @@ export const initializeMediaUpload = async (imageURL: string) => {
     // Send the request to Twitter API to initialize media upload
     const payload = new URLSearchParams({
       command: "INIT",
-      media_type: "image/webp",
+      media_type: imgType.mime,
       total_bytes: imageBuffer.length.toString()
     });
 

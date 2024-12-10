@@ -16,10 +16,10 @@ const makePost2 = async () => {
   const prompt = "write a tweet about health";
 
   const tweetText: string =
-    "Health is wealth, take your health seriously today";
+    "testing testing";
 
   const tweetImage: string =
-    "https://res.cloudinary.com/ds7xwxu4j/image/upload/v1733819107/DALL_E_2024-12-10_09.22.14_-_A_cute_and_realistic_panda_dressed_as_a_doctor_wearing_a_white_lab_coat_a_stethoscope_around_its_neck_and_holding_a_clipboard._The_panda_is_depicte.webp";
+    "https://oaidalleapiprodscus.blob.core.windows.net/private/org-5KF8r6lwWPQPKGqaZAuU1zE8/user-McBQhnPUW2UUfrcRW9rJ4w0D/img-ei3NucblQvOBvnbgdlT26lDG.png?st=2024-12-10T07%3A45%3A31Z&se=2024-12-10T09%3A45%3A31Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-12-09T12%3A16%3A13Z&ske=2024-12-10T12%3A16%3A13Z&sks=b&skv=2024-08-04&sig=CZDv8VoELObbdJXh5VEAgdoLmO%2BvCFMgTfjng4p3BZg%3D";
 
   const imageID: string = await uploadImageAndGetMediaID(tweetImage);
 
