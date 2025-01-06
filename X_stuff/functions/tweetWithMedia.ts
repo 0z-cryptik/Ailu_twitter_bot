@@ -14,13 +14,14 @@ if (!accessToken || !accessTokenSecret) {
   );
 }
 
-export const tweet = async (tweetText: string, mediaID: string) => {
+export const tweetWithMedia = async (
+  tweetText: string,
+  mediaID: string
+) => {
   if (!mediaID) {
     console.error("Error: mediaID is null or undefined");
     return;
   }
-
-  console.log(`Reached tweet function. MediaID: ${mediaID}`);
 
   try {
     const payloadData = {
@@ -33,7 +34,7 @@ export const tweet = async (tweetText: string, mediaID: string) => {
     // Generate the OAuth authorization header
     const authHeader = oauth.toHeader(
       oauth.authorize(
-        { url: tweetURL, method: "POST"},
+        { url: tweetURL, method: "POST" },
         {
           key: accessToken,
           secret: accessTokenSecret
@@ -52,6 +53,6 @@ export const tweet = async (tweetText: string, mediaID: string) => {
     console.info("Tweet posted successfully:", response.data);
     return response.data;
   } catch (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 };
