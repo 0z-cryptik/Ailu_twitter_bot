@@ -6,13 +6,30 @@ import fs from "fs";
 import { config } from "dotenv";
 import { tweetOnlyText } from "./X_stuff/functions/tweetOnlyText";
 import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia";
+import express, { Express, Response } from "express";
+import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets";
 config();
 
 const openAIKey = process.env.OPENAI_API_KEY;
 const bearerToken = process.env.BEARER_TOKEN;
 const accessToken = process.env.ACCESS_TOKEN;
 const accessSecret = process.env.ACCESS_SECRET;
+const userID = process.env.DAICHI_ACCOUNT_ID;
 
+const app: Express = express();
+const port = process.env.PORT;
+
+app.use(express.json());
+
+app.get("/fetchTweets", async (_, res: Response) => {
+  try {
+    await fetchTweets(bearerToken, userID);
+    res.sendStatus(200);
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(500);
+  }
+});
 // const makePost = async () => {
 //   const prompt = "write a tweet about health";
 //   const tweetText: string = await generateTweetText(prompt);

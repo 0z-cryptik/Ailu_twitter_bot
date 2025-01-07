@@ -1,14 +1,11 @@
 import fetch from "node-fetch";
-import { config } from "dotenv";
 import fs from "fs";
 import path from "path";
 
-config({ path: "../../.env" });
-
-const BEARER_TOKEN = process.env.BEARER_TOKEN;
-const USER_ID = process.env.DAICHI_ACCOUNT_ID;
-
-export const fetchTweets = async () => {
+export const fetchTweets = async (
+  BEARER_TOKEN: string,
+  USER_ID: string
+) => {
   const url = `https://api.twitter.com/2/users/${USER_ID}/tweets`;
   const headers = { Authorization: `Bearer ${BEARER_TOKEN}` };
 
@@ -48,5 +45,3 @@ export const fetchTweets = async () => {
     console.error("Fetch error:", error);
   }
 };
-
-fetchTweets();
