@@ -7,6 +7,8 @@ import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia.js";
 import express, { Express, Response } from "express";
 import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets.js";
 import { getRandomNumber } from "./X_stuff/functions/getRandomNumber.js";
+import path from "path";
+import { fileURLToPath } from "url";
 config();
 
 const openAIKey = process.env.OPENAI_API_KEY;
@@ -47,6 +49,8 @@ const tweetText = async () => {
     "utf-8"
   );
 
+  console.log(tweets);
+
   const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link in the tweet`;
 
   const answer = await generateTweetText(prompt, openAIKey);
@@ -65,9 +69,14 @@ const tweetText = async () => {
 };
 
 const tweetImage = async () => {
-  const imageBuffer = fs.readFileSync(
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const imagePath = path.join(
+    __dirname,
     `./files/images/${getRandomNumber()}.jpg`
   );
+
+  const imageBuffer = fs.readFileSync(imagePath);
   const mediaIDString: string = await uploadImageAndGetMediaID(
     imageBuffer,
     accessToken,
