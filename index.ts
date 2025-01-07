@@ -51,7 +51,7 @@ const tweetText = async () => {
 
   console.log(tweets);
 
-  const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link in the tweet`;
+  const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link or hashtags in the tweet`;
 
   const answer = await generateTweetText(prompt, openAIKey);
 
