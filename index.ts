@@ -1,6 +1,4 @@
-import { generateTweetImage } from "./openAIStuff/generateTweetImage";
 import { generateTweetText } from "./openAIStuff/generateTweetText";
-// import { tweet } from "./X_stuff/functions/tweetWithMedia";
 import { uploadImageAndGetMediaID } from "./X_stuff/imageUpload/uploadImage";
 import fs from "fs";
 import { config } from "dotenv";
@@ -8,6 +6,7 @@ import { tweetOnlyText } from "./X_stuff/functions/tweetOnlyText";
 import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia";
 import express, { Express, Response } from "express";
 import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets";
+import { getRandomNumber } from "./X_stuff/functions/getRandomNumber";
 config();
 
 const openAIKey = process.env.OPENAI_API_KEY;
@@ -30,60 +29,45 @@ app.get("/fetchTweets", async (_, res: Response) => {
     res.sendStatus(500);
   }
 });
-// const makePost = async () => {
-//   const prompt = "write a tweet about health";
-//   const tweetText: string = await generateTweetText(prompt);
-//   const tweetImage: string = await generateTweetImage();
-//   const bufferedImage: string = await uploadImageAndGetMediaID(tweetImage);
 
-//   await tweet(tweetText, bufferedImage);
-// };
+app.get("/tweet", async (_, res: Response) => {
+  try {
+    const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
+    await tweetTextOrImage();
+    res.sendStatus(200);
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(500);
+  }
+});
 
-// const makePost2 = async () => {
-//   const prompt = "write a tweet about health";
+const tweetText = async () => {
+  const tweets = fs.readFileSync(
+    "./files/tweets/daichiTweets.txt",
+    "utf-8"
+  );
 
-//   const tweetText: string =
-//     "testing testing";
+  const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link in the tweet`;
 
-//   const tweetImage: string =
-//     "https://oaidalleapiprodscus.blob.core.windows.net/private/org-5KF8r6lwWPQPKGqaZAuU1zE8/user-McBQhnPUW2UUfrcRW9rJ4w0D/img-ei3NucblQvOBvnbgdlT26lDG.png?st=2024-12-10T07%3A45%3A31Z&se=2024-12-10T09%3A45%3A31Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-12-09T12%3A16%3A13Z&ske=2024-12-10T12%3A16%3A13Z&sks=b&skv=2024-08-04&sig=CZDv8VoELObbdJXh5VEAgdoLmO%2BvCFMgTfjng4p3BZg%3D";
+  const answer = await generateTweetText(prompt, openAIKey);
 
-//   const imageID: string = await uploadImageAndGetMediaID(tweetImage);
+  if (answer) {
+    const response = await tweetOnlyText(
+      answer,
+      accessToken,
+      accessSecret
+    );
 
-//   await tweet(tweetText, imageID);
-// };
+    console.log(response);
+  } else {
+    console.error("no response from openAI");
+  }
+};
 
-// makePost2();
-
-// const makePost3 = async () => {
-//   const tweets = fs.readFileSync(
-//     "./files/tweets/daichiTweets.txt",
-//     "utf-8"
-//   );
-
-//   const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link in the tweet`;
-
-//   const answer = await generateTweetText(prompt, openAIKey);
-
-//   console.log(answer);
-
-//   if (answer) {
-//     const response = await tweetOnlyText(
-//       answer,
-//       accessToken,
-//       accessSecret
-//     );
-
-//     console.log(response);
-//   } else {
-//     console.error("no response from openAI");
-//   }
-// };
-
-// makePost3()
-
-const makeImage = async () => {
-  const imageBuffer = fs.readFileSync("./files/images/sample.jpg");
+const tweetImage = async () => {
+  const imageBuffer = fs.readFileSync(
+    `./files/images/${getRandomNumber()}.jpg`
+  );
   const mediaIDString: string = await uploadImageAndGetMediaID(
     imageBuffer,
     accessToken,
@@ -96,5 +80,3 @@ const makeImage = async () => {
     console.error("couldn't obtain media ID");
   }
 };
-
-makeImage();
