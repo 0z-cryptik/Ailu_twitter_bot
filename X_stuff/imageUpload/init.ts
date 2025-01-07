@@ -1,22 +1,15 @@
 import axios from "axios";
 import { oauth } from "../Oauth/Oauth";
-import {
-  accessSecret,
-  accessToken,
-  uploadURL
-} from "../../globalVariables/globalVariables";
+import { uploadURL } from "../../globalVariables/globalVariables";
 import imageType from "image-type";
+import fs from "fs";
 
-export const initializeMediaUpload = async (imageURL: string) => {
+export const initializeMediaUpload = async (
+  imageBuffer: Buffer,
+  accessToken: string,
+  accessSecret: string
+) => {
   try {
-    // Fetch the image
-    const imageFetch = await axios.get(imageURL, {
-      responseType: "arraybuffer"
-    });
-
-    const imageBuffer = imageFetch.data;
-    console.log(imageBuffer);
-
     const imgType = await imageType(imageBuffer);
 
     // Prepare the OAuth parameters
@@ -56,7 +49,7 @@ export const initializeMediaUpload = async (imageURL: string) => {
 
     console.log("Initialization Response:", initResponse.data);
 
-    return [initResponse.data.media_id_string, imageBuffer];
+    return initResponse.data.media_id_string;
   } catch (err) {
     console.error(
       "Error during initialization:",

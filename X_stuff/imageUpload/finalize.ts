@@ -1,11 +1,12 @@
 import { oauth } from "../Oauth/Oauth";
-import { config } from "dotenv";
 import { uploadURL } from "../../globalVariables/globalVariables";
 import axios from "axios";
 
-config();
-
-export const finalizeUpload = async (mediaID: string) => {
+export const finalizeUpload = async (
+  mediaID: string,
+  accessToken: string,
+  accessSecret: string
+) => {
   try {
     // Prepare payload
     const payload = new URLSearchParams({
@@ -26,8 +27,8 @@ export const finalizeUpload = async (mediaID: string) => {
     // OAuth Authorization
     const oauthParams = oauth.toHeader(
       oauth.authorize(requestData, {
-        key: process.env.ACCESS_TOKEN,
-        secret: process.env.ACCESS_SECRET
+        key: accessToken,
+        secret: accessSecret
       })
     );
 

@@ -5,6 +5,7 @@ import { uploadImageAndGetMediaID } from "./X_stuff/imageUpload/uploadImage";
 import fs from "fs";
 import { config } from "dotenv";
 import { tweetOnlyText } from "./X_stuff/functions/tweetOnlyText";
+import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia";
 config();
 
 const openAIKey = process.env.OPENAI_API_KEY;
@@ -37,29 +38,46 @@ const accessSecret = process.env.ACCESS_SECRET;
 
 // makePost2();
 
-const makePost3 = async () => {
-  const tweets = fs.readFileSync(
-    "./files/tweets/daichiTweets.txt",
-    "utf-8"
+// const makePost3 = async () => {
+//   const tweets = fs.readFileSync(
+//     "./files/tweets/daichiTweets.txt",
+//     "utf-8"
+//   );
+
+//   const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link in the tweet`;
+
+//   const answer = await generateTweetText(prompt, openAIKey);
+
+//   console.log(answer);
+
+//   if (answer) {
+//     const response = await tweetOnlyText(
+//       answer,
+//       accessToken,
+//       accessSecret
+//     );
+
+//     console.log(response);
+//   } else {
+//     console.error("no response from openAI");
+//   }
+// };
+
+// makePost3()
+
+const makeImage = async () => {
+  const imageBuffer = fs.readFileSync("./files/images/sample.jpg");
+  const mediaIDString: string = await uploadImageAndGetMediaID(
+    imageBuffer,
+    accessToken,
+    accessSecret
   );
 
-  const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link in the tweet`;
-
-  const answer = await generateTweetText(prompt, openAIKey);
-
-  console.log(answer);
-
-  if (answer) {
-    const response = await tweetOnlyText(
-      answer,
-      accessToken,
-      accessSecret
-    );
-
-    console.log(response);
+  if (mediaIDString) {
+    await tweetOnlyMedia(mediaIDString, accessToken, accessSecret);
   } else {
-    console.error("no response from openAI");
+    console.error("couldn't obtain media ID");
   }
 };
 
-makePost3()
+makeImage();

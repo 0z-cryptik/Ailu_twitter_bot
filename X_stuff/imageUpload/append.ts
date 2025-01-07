@@ -1,14 +1,12 @@
 import { oauth } from "../Oauth/Oauth";
-import {
-  uploadURL,
-  accessSecret,
-  accessToken
-} from "../../globalVariables/globalVariables";
+import { uploadURL } from "../../globalVariables/globalVariables";
 import axios from "axios";
 
 export const appendMediaData = async (
   mediaID: string,
-  imageBuffer: Buffer
+  imageBuffer: Buffer,
+  accessToken: string,
+  accessSecret: string
 ) => {
   try {
     // Base64 encode the image data
