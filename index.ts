@@ -1,12 +1,12 @@
-import { generateTweetText } from "./openAIStuff/generateTweetText";
-import { uploadImageAndGetMediaID } from "./X_stuff/imageUpload/uploadImage";
+import { generateTweetText } from "./openAIStuff/generateTweetText.js";
+import { uploadImageAndGetMediaID } from "./X_stuff/imageUpload/uploadImage.js";
 import fs from "fs";
 import { config } from "dotenv";
-import { tweetOnlyText } from "./X_stuff/functions/tweetOnlyText";
-import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia";
+import { tweetOnlyText } from "./X_stuff/functions/tweetOnlyText.js";
+import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia.js";
 import express, { Express, Response } from "express";
-import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets";
-import { getRandomNumber } from "./X_stuff/functions/getRandomNumber";
+import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets.js";
+import { getRandomNumber } from "./X_stuff/functions/getRandomNumber.js";
 config();
 
 const openAIKey = process.env.OPENAI_API_KEY;
@@ -80,3 +80,7 @@ const tweetImage = async () => {
     console.error("couldn't obtain media ID");
   }
 };
+
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});

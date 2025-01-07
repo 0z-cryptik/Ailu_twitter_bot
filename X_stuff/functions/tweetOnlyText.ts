@@ -1,5 +1,5 @@
-import { tweetURL } from "../../globalVariables/globalVariables";
-import { oauth } from "../Oauth/Oauth";
+import { tweetURL } from "../../globalVariables/globalVariables.js";
+import { oauth } from "../Oauth/Oauth.js";
 import axios from "axios";
 
 

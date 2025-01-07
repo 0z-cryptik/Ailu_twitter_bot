@@ -1,7 +1,7 @@
 import { config } from "dotenv";
-import { oauth } from "../Oauth/Oauth";
+import { oauth } from "../Oauth/Oauth.js";
 import axios from "axios";
-import { tweetURL } from "../../globalVariables/globalVariables";
+import { tweetURL } from "../../globalVariables/globalVariables.js";
 
 config();
 

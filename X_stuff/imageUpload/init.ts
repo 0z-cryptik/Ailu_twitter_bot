@@ -1,6 +1,6 @@
 import axios from "axios";
-import { oauth } from "../Oauth/Oauth";
-import { uploadURL } from "../../globalVariables/globalVariables";
+import { oauth } from "../Oauth/Oauth.js";
+import { uploadURL } from "../../globalVariables/globalVariables.js";
 import imageType from "image-type";
 import fs from "fs";
 

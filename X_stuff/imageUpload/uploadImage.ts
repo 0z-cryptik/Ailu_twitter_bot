@@ -1,6 +1,6 @@
-import { initializeMediaUpload } from "./init";
-import { appendMediaData } from "./append";
-import { finalizeUpload } from "./finalize";
+import { initializeMediaUpload } from "./init.js";
+import { appendMediaData } from "./append.js";
+import { finalizeUpload } from "./finalize.js";
 
 export const uploadImageAndGetMediaID = async (
   imageBuffer: Buffer,
