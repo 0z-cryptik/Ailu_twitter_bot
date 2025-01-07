@@ -1,5 +1,5 @@
-import { oauth } from "../Oauth/Oauth";
-import { uploadURL } from "../../globalVariables/globalVariables";
+import { oauth } from "../Oauth/Oauth.js";
+import { uploadURL } from "../../globalVariables/globalVariables.js";
 import axios from "axios";
 
 export const appendMediaData = async (
