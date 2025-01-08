@@ -1,10 +1,4 @@
-import fetch from "node-fetch";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import { Tweets } from "../../databaseSchema/tweetsSchema";
 
 export const fetchTweets = async (
   BEARER_TOKEN: string,
@@ -14,7 +8,7 @@ export const fetchTweets = async (
   const headers = { Authorization: `Bearer ${BEARER_TOKEN}` };
 
   const params = new URLSearchParams({
-    max_results: "10",
+    max_results: "40",
     exclude: "replies,retweets"
   });
 
@@ -29,23 +23,23 @@ export const fetchTweets = async (
       const tweets: string[] =
         data?.data?.map((tweet: { text: string }) => tweet.text) || [];
 
-      console.log(tweets);
-
-      const delimiter = "|";
-
-      const tweetsFilePath = path.join(
-        __dirname,
-        "../../files/tweets/daichiTweets.txt"
-      );
-
-      fs.writeFileSync(tweetsFilePath, tweets.join(`\n${delimiter}\n`));
-      console.log(
-        "Tweets successfully fetched and saved to daichiTweets.txt"
-      );
-    } else {
-      console.error("Error fetching tweets:", await response.json());
+        if (tweets) {
+          await Tweets.deleteMany();
+          const newTweets = new Tweets({ tweets: tweets });
+          newTweets.save();
+  
+          console.log(
+            "Tweets successfully fetched and saved to DB"
+          );
+        } else {
+          console.error(
+            "response from twitter API is good but tweets array is empty"
+          );
+        }
+      } else {
+        console.error("Error fetching tweets:", await response.json());
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
     }
-  } catch (error) {
-    console.error("Fetch error:", error);
-  }
-};
+  };
