@@ -21,6 +21,7 @@
     "express": "^4.21.1",
     "form-data": "^4.0.1",
     "image-type": "^5.2.0",
+    "mongoose": "^8.9.3",
     "oauth": "^0.10.0",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.76.0"
