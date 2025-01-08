@@ -7,7 +7,6 @@ export const tweetOnlyMedia = async (
   accessToken: string,
   accessTokenSecret: string
 ) => {
-  try {
     const payloadData = {
       media: { media_ids: [mediaIDString] }
     };
@@ -33,7 +32,4 @@ export const tweetOnlyMedia = async (
 
     console.info("media posted successfully:", response.data);
     return response.data;
-  } catch (error) {
-    console.error(error.message);
-  }
 };

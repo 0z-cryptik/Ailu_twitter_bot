@@ -56,8 +56,8 @@ app.get("/tweet", async (req: Request, res: Response) => {
   }
 
   try {
-    //const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
-    await tweetText();
+    const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
+    await tweetTextOrImage();
     res.sendStatus(200);
   } catch (e) {
     console.error(e);
@@ -69,7 +69,6 @@ const tweetText = async () => {
   const response = await Tweets.find()
   const daichiTweets: string[] = response[0].tweets
   const tweets = daichiTweets.join("\n|\n")
-  console.info(tweets)
 
   const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link or hashtags in the tweet`;
 
