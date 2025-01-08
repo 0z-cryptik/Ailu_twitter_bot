@@ -10,5 +10,3 @@ export const uploadURL =
 export const tweetURL = "https://api.x.com/2/tweets";
 export const mediaPostURL =
   "https://upload.twitter.com/1.1/media/metadata/create.json";
-
-console.log(accessSecret, bearertoken);
