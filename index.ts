@@ -9,6 +9,8 @@ import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets.js";
 import { getRandomNumber } from "./X_stuff/functions/getRandomNumber.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import mongoose from "mongoose";
+
 config();
 
 const openAIKey = process.env.OPENAI_API_KEY;
@@ -19,6 +21,15 @@ const userID = process.env.DAICHI_ACCOUNT_ID;
 
 const app: Express = express();
 const port = process.env.PORT;
+const database = process.env.MONGO_URI;
+
+mongoose.connect(database);
+
+const db = mongoose.connection;
+
+db.once("open", () => {
+  console.log("connected to DB");
+});
 
 app.use(express.json());
 

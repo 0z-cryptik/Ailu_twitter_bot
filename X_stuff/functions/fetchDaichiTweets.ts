@@ -12,34 +12,28 @@ export const fetchTweets = async (
     exclude: "replies,retweets"
   });
 
-  try {
-    const response = await fetch(`${url}?${params.toString()}`, {
-      headers
-    });
+  const response = await fetch(`${url}?${params.toString()}`, {
+    headers
+  });
 
-    if (response.ok) {
-      const data = await response.json();
+  if (response.ok) {
+    const data = await response.json();
 
-      const tweets: string[] =
-        data?.data?.map((tweet: { text: string }) => tweet.text) || [];
+    const tweets: string[] =
+      data?.data?.map((tweet: { text: string }) => tweet.text) || [];
 
-        if (tweets) {
-          await Tweets.deleteMany();
-          const newTweets = new Tweets({ tweets: tweets });
-          newTweets.save();
-  
-          console.log(
-            "Tweets successfully fetched and saved to DB"
-          );
-        } else {
-          console.error(
-            "response from twitter API is good but tweets array is empty"
-          );
-        }
-      } else {
-        console.error("Error fetching tweets:", await response.json());
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
+    if (tweets) {
+      await Tweets.deleteMany();
+      const newTweets = new Tweets({ tweets: tweets });
+      newTweets.save();
+
+      console.log("Tweets successfully fetched and saved to DB");
+    } else {
+      console.error(
+        "response from twitter API is good but tweets array is empty"
+      );
     }
-  };
+  } else {
+    throw new Error(`Error fetching tweets: ${await response.json()}`);
+  }
+};
