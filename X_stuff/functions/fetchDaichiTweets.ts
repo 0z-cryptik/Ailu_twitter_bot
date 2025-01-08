@@ -1,4 +1,4 @@
-import { Tweets } from "../../databaseSchema/tweetsSchema";
+import { Tweets } from "../../databaseSchema/tweetsSchema.js";
 
 export const fetchTweets = async (
   BEARER_TOKEN: string,
