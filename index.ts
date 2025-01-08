@@ -4,7 +4,7 @@ import fs from "fs";
 import { config } from "dotenv";
 import { tweetOnlyText } from "./X_stuff/functions/tweetOnlyText.js";
 import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia.js";
-import express, { Express, Response } from "express";
+import express, { Express, Response, Request } from "express";
 import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets.js";
 import { getRandomNumber } from "./X_stuff/functions/getRandomNumber.js";
 import path from "path";
@@ -33,7 +33,12 @@ db.once("open", () => {
 
 app.use(express.json());
 
-app.get("/fetchTweets", async (_, res: Response) => {
+app.get("/fetchTweets", async (req: Request, res: Response) => {
+  if (!req.query.pass || req.query.pass !== process.env.MYPASS) {
+    res.sendStatus(400);
+    return
+  }
+
   try {
     await fetchTweets(bearerToken, userID);
     res.sendStatus(200);
@@ -43,7 +48,12 @@ app.get("/fetchTweets", async (_, res: Response) => {
   }
 });
 
-app.get("/tweet", async (_, res: Response) => {
+app.get("/tweet", async (req: Request, res: Response) => {
+  if(!req.query.pass || req.query.pass !== process.env.MYPASS ){
+    res.sendStatus(400)
+    return
+  }
+
   try {
     const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
     await tweetTextOrImage();
