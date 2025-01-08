@@ -21,7 +21,7 @@ const userID = process.env.DAICHI_ACCOUNT_ID;
 
 const app: Express = express();
 const port = process.env.PORT;
-const database = process.env.MONGO_URI;
+const database = process.env.MONGODB_URI;
 
 mongoose.connect(database);
 
