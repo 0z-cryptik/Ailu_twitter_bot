@@ -56,8 +56,8 @@ app.get("/tweet", async (req: Request, res: Response) => {
   }
 
   try {
-    const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
-    await tweetTextOrImage();
+    //const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
+    await tweetText();
     res.sendStatus(200);
   } catch (e) {
     console.error(e);
