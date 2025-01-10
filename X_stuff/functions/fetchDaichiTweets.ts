@@ -34,6 +34,7 @@ export const fetchTweets = async (
       );
     }
   } else {
-    throw new Error(`Error fetching tweets: ${await response.json()}`);
+    const errorResponse = await response.json()
+    throw new Error(`Error fetching tweets: ${JSON.stringify(errorResponse)}`);
   }
 };
