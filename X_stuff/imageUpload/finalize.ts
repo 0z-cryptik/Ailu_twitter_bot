@@ -44,6 +44,6 @@ export const finalizeUpload = async (
     return response.data.media_id_string;
   } catch (err) {
     console.error("Error finalizing upload:", err.message || err);
-    throw new Error("Error finalizing upload");
+    console.error("Error finalizing upload");
   }
 };

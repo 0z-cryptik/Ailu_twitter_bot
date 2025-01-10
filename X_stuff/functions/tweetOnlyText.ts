@@ -1,6 +1,5 @@
 import { tweetURL } from "../../globalVariables/globalVariables.js";
 import { oauth } from "../Oauth/Oauth.js";
-import axios from "axios";
 
 export const tweetOnlyText = async (
   tweetText: string,
@@ -11,7 +10,6 @@ export const tweetOnlyText = async (
     text: tweetText
   };
 
-  // Generate the OAuth authorization header
   const authHeader = oauth.toHeader(
     oauth.authorize(
       { url: tweetURL, method: "POST" },
@@ -22,14 +20,14 @@ export const tweetOnlyText = async (
     )
   );
 
-  // Make the POST request to Twitter API using axios
-  const response = await axios.post(tweetURL, payloadData, {
-    headers: {
-      Authorization: authHeader.Authorization,
-      "Content-Type": "application/json" // Correct Content-Type for JSON payload
-    }
+  const response = await fetch(tweetURL, {
+    method: "POST",
+    headers: { ...authHeader, "Content-Type": "application/json" },
+    body: JSON.stringify(payloadData)
   });
 
-  console.info("Tweet posted successfully:", response.data);
-  return response.data;
+  if (!response.ok){
+    const errorResponse = await response.json()
+    throw new Error(`Error posting text tweet ${JSON.stringify(errorResponse)}`)
+  }
 };

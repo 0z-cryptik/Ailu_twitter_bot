@@ -52,6 +52,6 @@ export const appendMediaData = async (
 
     console.log("Picture appended successfully.");
   } catch (err) {
-    throw new Error(`error appending, reason: ${err.message}`);
+    console.error(`error appending, reason: ${err.message}`);
   }
 };

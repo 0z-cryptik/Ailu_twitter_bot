@@ -12,7 +12,6 @@ export const initializeMediaUpload = async (
   try {
     const imgType = await imageType(imageBuffer);
 
-    // Prepare the OAuth parameters
     const requestData = {
       url: uploadURL,
       method: "POST",
@@ -23,15 +22,12 @@ export const initializeMediaUpload = async (
       }
     };
 
-    // Add token and secret to the authorization process
     const oauthParams = oauth.toHeader(
       oauth.authorize(requestData, {
         key: accessToken,
         secret: accessSecret
       })
     );
-
-    console.log("OAuth Authorization Header:", oauthParams);
 
     // Send the request to Twitter API to initialize media upload
     const payload = new URLSearchParams({
@@ -55,6 +51,6 @@ export const initializeMediaUpload = async (
       "Error during initialization:",
       err.response?.data || err.message || err
     );
-    throw new Error("Error initializing media upload");
+    console.error("Error initializing media upload");
   }
 };
