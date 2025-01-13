@@ -1,3 +1,5 @@
 export const getRandomNumber = () => {
-  return Math.floor(Math.random() * 87) + 1;
+  return Math.floor(Math.random() * 342) + 1;
 };
+
+console.log(getRandomNumber())

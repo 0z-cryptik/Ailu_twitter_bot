@@ -37,7 +37,7 @@ app.use(express.json());
 app.get("/fetchTweets", async (req: Request, res: Response) => {
   if (!req.query.pass || req.query.pass !== process.env.MYPASS) {
     res.sendStatus(400);
-    return
+    return;
   }
 
   try {
@@ -50,9 +50,9 @@ app.get("/fetchTweets", async (req: Request, res: Response) => {
 });
 
 app.get("/tweet", async (req: Request, res: Response) => {
-  if(!req.query.pass || req.query.pass !== process.env.MYPASS ){
-    res.sendStatus(400)
-    return
+  if (!req.query.pass || req.query.pass !== process.env.MYPASS) {
+    res.sendStatus(400);
+    return;
   }
 
   try {
@@ -66,20 +66,16 @@ app.get("/tweet", async (req: Request, res: Response) => {
 });
 
 const tweetText = async () => {
-  const response = await Tweets.find()
-  const daichiTweets: string[] = response[0].tweets
-  const tweets = daichiTweets.join("\n|\n")
+  const response = await Tweets.find();
+  const daichiTweets: string[] = response[0].tweets;
+  const tweets = daichiTweets.join("\n|\n");
 
   const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link or hashtags in the tweet, also let the tweet sound very direct and commanding`;
 
   const answer = await generateTweetText(prompt, openAIKey);
 
   if (answer) {
-    await tweetOnlyText(
-      answer,
-      accessToken,
-      accessSecret
-    );
+    await tweetOnlyText(answer, accessToken, accessSecret);
   } else {
     console.error("no response from openAI");
   }
@@ -88,10 +84,16 @@ const tweetText = async () => {
 const tweetImage = async () => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const imagePath = path.join(
-    __dirname,
-    `./files/images/${getRandomNumber()}.jpg`
-  );
+  const imageNumber: number = getRandomNumber();
+
+  let imagePath: string;
+
+  // an mp4 file is at 342
+  if (imageNumber === 342) {
+    imagePath = path.join(__dirname, `./files/images/${imageNumber}.MP4`);
+  } else {
+    imagePath = path.join(__dirname, `./files/images/${imageNumber}.jpg`);
+  }
 
   const imageBuffer = fs.readFileSync(imagePath);
   const mediaIDString: string = await uploadImageAndGetMediaID(
@@ -110,4 +112,3 @@ const tweetImage = async () => {
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
-
