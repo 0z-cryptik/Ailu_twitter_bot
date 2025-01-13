@@ -90,16 +90,18 @@ const tweetImage = async () => {
 
   // an mp4 file is at 342
   if (imageNumber === 342) {
-    imagePath = path.join(__dirname, `./files/images/${imageNumber}.MP4`);
+    imagePath = path.join(__dirname, "./files/images/342.MP4");
   } else {
     imagePath = path.join(__dirname, `./files/images/${imageNumber}.jpg`);
   }
 
   const imageBuffer = fs.readFileSync(imagePath);
+
   const mediaIDString: string = await uploadImageAndGetMediaID(
     imageBuffer,
     accessToken,
-    accessSecret
+    accessSecret,
+    imageNumber === 342
   );
 
   if (mediaIDString) {

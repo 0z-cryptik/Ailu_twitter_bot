@@ -1,23 +1,29 @@
 import axios from "axios";
 import { oauth } from "../Oauth/Oauth.js";
 import { uploadURL } from "../../globalVariables/globalVariables.js";
-import imageType from "image-type";
-import fs from "fs";
+import imageType, { ImageTypeResult } from "image-type";
 
 export const initializeMediaUpload = async (
   imageBuffer: Buffer,
   accessToken: string,
-  accessSecret: string
+  accessSecret: string,
+  video: boolean
 ) => {
   try {
-    const imgType = await imageType(imageBuffer);
+    let mediaType: string;
+
+    if (video) {
+      mediaType = "video/mp4";
+    } else {
+      mediaType = (await imageType(imageBuffer)).mime;
+    }
 
     const requestData = {
       url: uploadURL,
       method: "POST",
       data: {
         command: "INIT",
-        media_type: imgType.mime, // Use correct media type for your image
+        media_type: mediaType,
         total_bytes: imageBuffer.length.toString()
       }
     };
@@ -32,7 +38,7 @@ export const initializeMediaUpload = async (
     // Send the request to Twitter API to initialize media upload
     const payload = new URLSearchParams({
       command: "INIT",
-      media_type: imgType.mime,
+      media_type: mediaType,
       total_bytes: imageBuffer.length.toString()
     });
 

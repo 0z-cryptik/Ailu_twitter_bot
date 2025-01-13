@@ -5,16 +5,17 @@ import { finalizeUpload } from "./finalize.js";
 export const uploadImageAndGetMediaID = async (
   imageBuffer: Buffer,
   accessToken: string,
-  accessSecret: string
+  accessSecret: string,
+  video: boolean 
 ) => {
   // Step 1: Initialize the media upload and get media ID and buffer
-  const mediaID = await initializeMediaUpload(imageBuffer, accessToken, accessSecret);
+  const mediaID = await initializeMediaUpload(imageBuffer, accessToken, accessSecret, video);
 
   // Step 2: Append the image data
   await appendMediaData(mediaID, imageBuffer, accessToken, accessSecret);
 
   // Step 3: Finalize the upload and retrieve the final media ID string
-  const mediaIDString = await finalizeUpload(mediaID, accessToken, accessSecret);
+  await finalizeUpload(mediaID, accessToken, accessSecret);
 
   console.log(`Image uploaded successfully, media_id: ${mediaID}`);
   return mediaID;
