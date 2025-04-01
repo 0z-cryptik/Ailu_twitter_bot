@@ -19,15 +19,3 @@ export const generateTweetText = async (prompt: string, apiKey: string) => {
   // remove quotation marks and return
   return answer.replace(/"/g, "");
 };
-
-// const makePost3 = async() => {
-//   const tweets = fs.readFileSync("../files/tweets/daichiTweets.txt", "utf-8")
-
-//   const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link in the tweet`
-
-//   const answer = await generateTweetText(prompt)
-
-//   return answer
-// }
-
-// makePost3()
