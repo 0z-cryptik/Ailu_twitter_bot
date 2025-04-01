@@ -75,6 +75,7 @@ const tweetText = async () => {
   const answer = await generateTweetText(prompt, openAIKey);
 
   if (answer) {
+    console.info(answer);
     await tweetOnlyText(answer, accessToken, accessSecret);
   } else {
     console.error("no response from openAI");
