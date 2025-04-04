@@ -57,7 +57,7 @@ app.get("/tweet", async (req: Request, res: Response) => {
 
   try {
     //const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
-    await tweetText();
+    await tweetText2();
     res.sendStatus(200);
   } catch (e) {
     console.error(e);
@@ -65,22 +65,27 @@ app.get("/tweet", async (req: Request, res: Response) => {
   }
 });
 
-const tweetText = async () => {
-  const response = await Tweets.find();
-  const daichiTweets: string[] = response[0].tweets;
-  const tweets = daichiTweets.join("\n|\n");
-
-  const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link or hashtags in the tweet, also let the tweet sound very direct and commanding`;
-
-  const answer = await generateTweetText(prompt, openAIKey);
-
-  if (answer) {
-    console.info(answer);
-    await tweetOnlyText(answer, accessToken, accessSecret);
-  } else {
-    console.error("no response from openAI");
-  }
+const tweetText2 = async () => {
+  const answer = "testing 1, 2, 3...";
+  await tweetOnlyText(answer, accessToken, accessSecret);
 };
+
+// const tweetText = async () => {
+//   const response = await Tweets.find();
+//   const daichiTweets: string[] = response[0].tweets;
+//   const tweets = daichiTweets.join("\n|\n");
+
+//   const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} NOTE: don't include any link or hashtags in the tweet, also let the tweet sound very direct and commanding`;
+
+//   const answer = await generateTweetText(prompt, openAIKey);
+
+//   if (answer) {
+//     console.info(answer);
+//     await tweetOnlyText(answer, accessToken, accessSecret);
+//   } else {
+//     console.error("no response from openAI");
+//   }
+// };
 
 // const tweetImage = async () => {
 //   const __filename = fileURLToPath(import.meta.url);
