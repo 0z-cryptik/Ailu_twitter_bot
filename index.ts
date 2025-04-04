@@ -77,20 +77,21 @@ const tweetText = async () => {
   if (!answer) {
     console.error("No response from openAI");
     return;
-  } else {
-    console.info(answer);
   }
 
   if (answer && answer.length <= 280) {
+    console.info(`not more than 280 chars on the first trial ${answer}`);
     await tweetOnlyText(answer, accessToken, accessSecret);
   } else if (answer && answer.length > 280) {
+    console.info(`it is more than 280 chars on the first trial ${answer}`);
     const prompt2Summarize = `Shorten this text to 280 characters or less: ${answer}`;
 
     const shortenedAnswer = await generateTweetText(
       prompt2Summarize,
       openAIKey
     );
-
+    
+    console.error(`shortened answer ${shortenedAnswer}`);
     await tweetOnlyText(shortenedAnswer, accessToken, accessSecret);
   }
 };
