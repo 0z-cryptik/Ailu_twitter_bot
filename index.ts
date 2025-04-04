@@ -70,7 +70,7 @@ const tweetText = async () => {
   const daichiTweets: string[] = response[0].tweets;
   const tweets = daichiTweets.join("\n|\n");
 
-  const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets} RULES: the tweet you write must not exceed 280 characters, don't include any link or hashtags in the tweet, let the tweet sound very direct and commanding`;
+  const prompt = `These are tweets from a certain twitter account, I want you to study them and write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets}\n RULES: the tweet you write must not exceed 280 characters because my account doesn't have a verification badge and cannot post more than 280 characters at once, don't include any link or hashtags in the tweet, let the tweet sound very direct and commanding`;
 
   const answer = await generateTweetText(prompt, openAIKey);
 
@@ -84,13 +84,14 @@ const tweetText = async () => {
     await tweetOnlyText(answer, accessToken, accessSecret);
   } else if (answer && answer.length > 280) {
     console.info(`it is more than 280 chars on the first trial ${answer}`);
-    const prompt2Summarize = `Shorten this text to 280 characters or less: ${answer}`;
+
+    const prompt2Summarize = `Shorten this tweet to 280 characters or less so that my account doesn't need a verification badge to post it: ${answer}`;
 
     const shortenedAnswer = await generateTweetText(
       prompt2Summarize,
       openAIKey
     );
-    
+
     console.error(`shortened answer ${shortenedAnswer}`);
     await tweetOnlyText(shortenedAnswer, accessToken, accessSecret);
   }
