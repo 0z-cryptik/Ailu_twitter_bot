@@ -56,8 +56,8 @@ app.get("/tweet", async (req: Request, res: Response) => {
   }
 
   try {
-    //const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
-    await tweetText();
+    const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
+    await tweetTextOrImage();
     res.sendStatus(200);
   } catch (e) {
     console.error(e);
@@ -70,6 +70,7 @@ const tweetText = async () => {
   const daichiTweets: string[] = response[0].tweets;
   const tweets = daichiTweets.join("\n|\n");
 
+  //250 characters because it always exceeds 280 characters when I put 280 characters instead, but 250 characters work just fine
   const prompt = `These are tweets from a certain twitter account, I want you to study them and in 250 characters or less write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets}\n RULES: don't include any link or hashtags in the tweet, let the tweet sound very direct and commanding`;
 
   const answer = await generateTweetText(prompt, openAIKey);
@@ -93,39 +94,44 @@ const tweetText = async () => {
     );
 
     console.info(`shortened answer ${shortenedAnswer}`);
-    await tweetOnlyText(shortenedAnswer, accessToken, accessSecret);
+
+    if (shortenedAnswer.length <= 280) {
+      await tweetOnlyText(shortenedAnswer, accessToken, accessSecret);
+    } else {
+      await tweetImage();
+    }
   }
 };
 
-// const tweetImage = async () => {
-//   const __filename = fileURLToPath(import.meta.url);
-//   const __dirname = path.dirname(__filename);
-//   const imageNumber: number = getRandomNumber();
+const tweetImage = async () => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const imageNumber: number = getRandomNumber();
 
-//   let imagePath: string;
+  let imagePath: string;
 
-//   // an mp4 file is at 342
-//   if (imageNumber === 342) {
-//     imagePath = path.join(__dirname, "./files/images/342.MP4");
-//   } else {
-//     imagePath = path.join(__dirname, `./files/images/${imageNumber}.jpg`);
-//   }
+  // an mp4 file is at 342
+  if (imageNumber === 342) {
+    imagePath = path.join(__dirname, "./files/images/342.MP4");
+  } else {
+    imagePath = path.join(__dirname, `./files/images/${imageNumber}.jpg`);
+  }
 
-//   const imageBuffer = fs.readFileSync(imagePath);
+  const imageBuffer = fs.readFileSync(imagePath);
 
-//   const mediaIDString: string = await uploadImageAndGetMediaID(
-//     imageBuffer,
-//     accessToken,
-//     accessSecret,
-//     imageNumber === 342
-//   );
+  const mediaIDString: string = await uploadImageAndGetMediaID(
+    imageBuffer,
+    accessToken,
+    accessSecret,
+    imageNumber === 342
+  );
 
-//   if (mediaIDString) {
-//     await tweetOnlyMedia(mediaIDString, accessToken, accessSecret);
-//   } else {
-//     console.error("couldn't obtain media ID");
-//   }
-// };
+  if (mediaIDString) {
+    await tweetOnlyMedia(mediaIDString, accessToken, accessSecret);
+  } else {
+    console.error("couldn't obtain media ID");
+  }
+};
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
