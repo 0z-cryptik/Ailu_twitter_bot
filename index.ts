@@ -56,8 +56,8 @@ app.get("/tweet", async (req: Request, res: Response) => {
   }
 
   try {
-    const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
-    await tweetTextOrImage();
+    //const tweetTextOrImage = Math.random() < 0.5 ? tweetImage : tweetText;
+    await tweetText();
     res.sendStatus(200);
   } catch (e) {
     console.error(e);
@@ -82,35 +82,35 @@ const tweetText = async () => {
   }
 };
 
-const tweetImage = async () => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const imageNumber: number = getRandomNumber();
+// const tweetImage = async () => {
+//   const __filename = fileURLToPath(import.meta.url);
+//   const __dirname = path.dirname(__filename);
+//   const imageNumber: number = getRandomNumber();
 
-  let imagePath: string;
+//   let imagePath: string;
 
-  // an mp4 file is at 342
-  if (imageNumber === 342) {
-    imagePath = path.join(__dirname, "./files/images/342.MP4");
-  } else {
-    imagePath = path.join(__dirname, `./files/images/${imageNumber}.jpg`);
-  }
+//   // an mp4 file is at 342
+//   if (imageNumber === 342) {
+//     imagePath = path.join(__dirname, "./files/images/342.MP4");
+//   } else {
+//     imagePath = path.join(__dirname, `./files/images/${imageNumber}.jpg`);
+//   }
 
-  const imageBuffer = fs.readFileSync(imagePath);
+//   const imageBuffer = fs.readFileSync(imagePath);
 
-  const mediaIDString: string = await uploadImageAndGetMediaID(
-    imageBuffer,
-    accessToken,
-    accessSecret,
-    imageNumber === 342
-  );
+//   const mediaIDString: string = await uploadImageAndGetMediaID(
+//     imageBuffer,
+//     accessToken,
+//     accessSecret,
+//     imageNumber === 342
+//   );
 
-  if (mediaIDString) {
-    await tweetOnlyMedia(mediaIDString, accessToken, accessSecret);
-  } else {
-    console.error("couldn't obtain media ID");
-  }
-};
+//   if (mediaIDString) {
+//     await tweetOnlyMedia(mediaIDString, accessToken, accessSecret);
+//   } else {
+//     console.error("couldn't obtain media ID");
+//   }
+// };
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
