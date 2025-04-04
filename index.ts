@@ -74,11 +74,24 @@ const tweetText = async () => {
 
   const answer = await generateTweetText(prompt, openAIKey);
 
-  if (answer) {
-    console.info(answer);
-    await tweetOnlyText(answer, accessToken, accessSecret);
+  if (!answer) {
+    console.error("No response from openAI");
+    return;
   } else {
-    console.error("no response from openAI");
+    console.info(answer);
+  }
+
+  if (answer && answer.length <= 280) {
+    await tweetOnlyText(answer, accessToken, accessSecret);
+  } else if (answer && answer.length > 280) {
+    const prompt2Summarize = `Shorten this text to 280 characters or less: ${answer}`;
+
+    const shortenedAnswer = await generateTweetText(
+      prompt2Summarize,
+      openAIKey
+    );
+
+    await tweetOnlyText(shortenedAnswer, accessToken, accessSecret);
   }
 };
 
