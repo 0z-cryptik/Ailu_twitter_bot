@@ -1,10 +1,10 @@
-import { getRandomNumber } from "../X_stuff/functions/getRandomNumber";
+import { getRandomNumber } from "../X_stuff/functions/getRandomNumber.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "dotenv";
 import fs from "fs";
-import { tweetOnlyMedia } from "../X_stuff/functions/tweetOnlyMedia";
-import { uploadImageAndGetMediaID } from "../X_stuff/imageUpload/uploadImage";
+import { tweetOnlyMedia } from "../X_stuff/functions/tweetOnlyMedia.js";
+import { uploadImageAndGetMediaID } from "../X_stuff/imageUpload/uploadImage.js";
 
 config();
 

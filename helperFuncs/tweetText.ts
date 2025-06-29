@@ -1,7 +1,7 @@
-import { getTweetText } from "./getTweet";
-import { tweetOnlyText } from "../X_stuff/functions/tweetOnlyText";
+import { getTweetText } from "./getTweet.js";
+import { tweetOnlyText } from "../X_stuff/functions/tweetOnlyText.js";
 import { config } from "dotenv";
-import { tweetImage } from "./tweetImage";
+import { tweetImage } from "./tweetImage.js";
 
 config();
 
