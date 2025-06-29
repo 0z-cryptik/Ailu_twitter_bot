@@ -1,17 +1,9 @@
-import { generateTweetText } from "./openAIStuff/generateTweetText.js";
-import { uploadImageAndGetMediaID } from "./X_stuff/imageUpload/uploadImage.js";
-import fs from "fs";
 import { config } from "dotenv";
-import { tweetOnlyText } from "./X_stuff/functions/tweetOnlyText.js";
-import { tweetOnlyMedia } from "./X_stuff/functions/tweetOnlyMedia.js";
 import express, { Express, Response, Request } from "express";
 import { fetchTweets } from "./X_stuff/functions/fetchDaichiTweets.js";
-import { getRandomNumber } from "./X_stuff/functions/getRandomNumber.js";
-import path from "path";
-import { fileURLToPath } from "url";
 import mongoose from "mongoose";
-import { Tweets } from "./databaseSchema/tweetsSchema.js";
-import { getTweetText } from "./helperFuncs/getTweet.js";
+import { tweetImage } from "./helperFuncs/tweetImage.js";
+import { tweetText } from "./helperFuncs/tweetText.js";
 
 config();
 
@@ -64,48 +56,4 @@ app.get("/tweet", async (req: Request, res: Response) => {
     console.error(e);
     res.sendStatus(500);
   }
-});
-
-const tweetText = async () => {
-  try {
-    const tweet = await getTweetText();
-    await tweetOnlyText(tweet, accessToken, accessSecret);
-  } catch (e) {
-    await tweetImage();
-    console.error(e);
-  }
-};
-
-const tweetImage = async () => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const imageNumber: number = getRandomNumber();
-
-  let imagePath: string;
-
-  // an mp4 file is at 342
-  if (imageNumber === 342) {
-    imagePath = path.join(__dirname, "./files/images/342.MP4");
-  } else {
-    imagePath = path.join(__dirname, `./files/images/${imageNumber}.jpg`);
-  }
-
-  const imageBuffer = fs.readFileSync(imagePath);
-
-  const mediaIDString: string = await uploadImageAndGetMediaID(
-    imageBuffer,
-    accessToken,
-    accessSecret,
-    imageNumber === 342
-  );
-
-  if (mediaIDString) {
-    await tweetOnlyMedia(mediaIDString, accessToken, accessSecret);
-  } else {
-    console.error("couldn't obtain media ID");
-  }
-};
-
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
 });
