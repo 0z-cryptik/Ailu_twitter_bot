@@ -7,10 +7,7 @@ import { tweetText } from "./helperFuncs/tweetText.js";
 
 config();
 
-const openAIKey = process.env.OPENAI_API_KEY;
 const bearerToken = process.env.BEARER_TOKEN;
-const accessToken = process.env.ACCESS_TOKEN;
-const accessSecret = process.env.ACCESS_SECRET;
 const userID = process.env.DAICHI_ACCOUNT_ID;
 
 const app: Express = express();
@@ -56,4 +53,8 @@ app.get("/tweet", async (req: Request, res: Response) => {
     console.error(e);
     res.sendStatus(500);
   }
+});
+
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
 });
