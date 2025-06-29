@@ -11,6 +11,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import { Tweets } from "./databaseSchema/tweetsSchema.js";
+import { getTweetText } from "./helperFuncs/getTweet.js";
 
 config();
 
@@ -66,40 +67,12 @@ app.get("/tweet", async (req: Request, res: Response) => {
 });
 
 const tweetText = async () => {
-  const response = await Tweets.find();
-  const daichiTweets: string[] = response[0].tweets;
-  const tweets = daichiTweets.join("\n|\n");
-
-  //250 characters because it always exceeds 280 characters when I put 280 characters instead, but 250 characters work just fine
-  const prompt = `These are tweets from a certain twitter account, I want you to study them and in 250 characters or less write a tweet in the style and manner of this twitter account, I want you to copy the user's style. These are the tweets: ${tweets}\n RULES: don't include any link or hashtags in the tweet, let the tweet sound very direct and commanding`;
-
-  const answer = await generateTweetText(prompt, openAIKey);
-
-  if (!answer) {
-    console.error("No response from openAI");
-    return;
-  }
-
-  if (answer && answer.length <= 280) {
-    console.info(`not more than 280 chars on the first trial ${answer}`);
-    await tweetOnlyText(answer, accessToken, accessSecret);
-  } else if (answer && answer.length > 280) {
-    console.info(`it is more than 280 chars on the first trial ${answer}`);
-
-    const prompt2Summarize = `Shorten this tweet to 260 characters: ${answer}`;
-
-    const shortenedAnswer = await generateTweetText(
-      prompt2Summarize,
-      openAIKey
-    );
-
-    console.info(`shortened answer ${shortenedAnswer}`);
-
-    if (shortenedAnswer.length <= 280) {
-      await tweetOnlyText(shortenedAnswer, accessToken, accessSecret);
-    } else {
-      await tweetImage();
-    }
+  try {
+    const tweet = await getTweetText();
+    await tweetOnlyText(tweet, accessToken, accessSecret);
+  } catch (e) {
+    await tweetImage();
+    console.error(e);
   }
 };
 
