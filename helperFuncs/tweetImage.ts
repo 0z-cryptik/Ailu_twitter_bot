@@ -20,11 +20,11 @@ export const tweetImage = async () => {
 
   // an mp4 file is at 342
   if (imageNumber === 342) {
-    imagePath = path.join(__dirname, "../../files/images/342.MP4");
+    imagePath = path.join(__dirname, "../files/images/342.MP4");
   } else {
     imagePath = path.join(
       __dirname,
-      `../../files/images/${imageNumber}.jpg`
+      `../files/images/${imageNumber}.jpg`
     );
   }
 
